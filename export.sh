@@ -71,5 +71,5 @@ FROM Concerts c \
 JOIN Concert_Izvodaci ci ON c.ID = ci.ConcertID \
 JOIN Izvodaci i ON ci.IzvodacID = i.IzvodacID \
 ORDER BY c.ID, i.Ime, i.Prezime; \
-" koncert > koncert.csv
+" koncert > koncerti.csv
 
