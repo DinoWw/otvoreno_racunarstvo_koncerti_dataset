@@ -1,0 +1,12 @@
+services:
+  or-db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - pgdata:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
