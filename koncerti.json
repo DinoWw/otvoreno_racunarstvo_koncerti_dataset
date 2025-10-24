@@ -1,18 +1,209 @@
-{"koncerti": 
-
-[{"id":1,"naziv":"Ljetni festival","datum":"2025-07-12","vrijeme":"20:00:00","lokacija":"Zagreb","unutarnjivanjski":"Unutarnji","glazbenagrupa":"Električni orgazam","zanr":"Rock","trajanjemin":120,"ime":"Ana","prezime":"Kovač"}, 
- {"id":1,"naziv":"Ljetni festival","datum":"2025-07-12","vrijeme":"20:00:00","lokacija":"Zagreb","unutarnjivanjski":"Unutarnji","glazbenagrupa":"Električni orgazam","zanr":"Rock","trajanjemin":120,"ime":"Marko","prezime":"Horvat"}, 
- {"id":2,"naziv":"Jazz noć","datum":"2025-08-05","vrijeme":"19:30:00","lokacija":"Split","unutarnjivanjski":"Vanjski","glazbenagrupa":"Blue Note Band","zanr":"Jazz","trajanjemin":90,"ime":"Ivan","prezime":"Babić"}, 
- {"id":3,"naziv":"Pop spektakl","datum":"2025-09-15","vrijeme":"21:00:00","lokacija":"Rijeka","unutarnjivanjski":"Unutarnji","glazbenagrupa":"Pop Stars","zanr":"Pop","trajanjemin":110,"ime":"Luka","prezime":"Radić"}, 
- {"id":3,"naziv":"Pop spektakl","datum":"2025-09-15","vrijeme":"21:00:00","lokacija":"Rijeka","unutarnjivanjski":"Unutarnji","glazbenagrupa":"Pop Stars","zanr":"Pop","trajanjemin":110,"ime":"Petra","prezime":"Jurić"}, 
- {"id":4,"naziv":"Klasični koncert","datum":"2025-10-01","vrijeme":"18:00:00","lokacija":"Osijek","unutarnjivanjski":"Unutarnji","glazbenagrupa":"Simfonijski orkestar","zanr":"Klasika","trajanjemin":75,"ime":"Maja","prezime":"Šimić"}, 
- {"id":5,"naziv":"Elektronski festival","datum":"2025-06-20","vrijeme":"22:00:00","lokacija":"Pula","unutarnjivanjski":"Vanjski","glazbenagrupa":"DJ Pulse","zanr":"Elektronska","trajanjemin":150,"ime":"Iva","prezime":"Marić"}, 
- {"id":5,"naziv":"Elektronski festival","datum":"2025-06-20","vrijeme":"22:00:00","lokacija":"Pula","unutarnjivanjski":"Vanjski","glazbenagrupa":"DJ Pulse","zanr":"Elektronska","trajanjemin":150,"ime":"Tomislav","prezime":"Novak"}, 
- {"id":6,"naziv":"Folk večer","datum":"2025-11-10","vrijeme":"20:30:00","lokacija":"Zadar","unutarnjivanjski":"Unutarnji","glazbenagrupa":"Tamburaški sastav","zanr":"Folk","trajanjemin":95,"ime":"Filip","prezime":"Knežević"}, 
- {"id":7,"naziv":"Rock maraton","datum":"2025-07-25","vrijeme":"20:00:00","lokacija":"Varaždin","unutarnjivanjski":"Vanjski","glazbenagrupa":"Rock Legends","zanr":"Rock","trajanjemin":130,"ime":"David","prezime":"Perić"}, 
- {"id":7,"naziv":"Rock maraton","datum":"2025-07-25","vrijeme":"20:00:00","lokacija":"Varaždin","unutarnjivanjski":"Vanjski","glazbenagrupa":"Rock Legends","zanr":"Rock","trajanjemin":130,"ime":"Ema","prezime":"Lončar"}, 
- {"id":8,"naziv":"Indie vikend","datum":"2025-08-12","vrijeme":"19:00:00","lokacija":"Šibenik","unutarnjivanjski":"Vanjski","glazbenagrupa":"Indie Vibes","zanr":"Indie","trajanjemin":100,"ime":"Marina","prezime":"Zorić"}, 
- {"id":9,"naziv":"Hip-hop party","datum":"2025-09-30","vrijeme":"21:30:00","lokacija":"Karlovac","unutarnjivanjski":"Unutarnji","glazbenagrupa":"The Rap Crew","zanr":"Hip-hop","trajanjemin":85,"ime":"Dino","prezime":"Vuković"}, 
- {"id":9,"naziv":"Hip-hop party","datum":"2025-09-30","vrijeme":"21:30:00","lokacija":"Karlovac","unutarnjivanjski":"Unutarnji","glazbenagrupa":"The Rap Crew","zanr":"Hip-hop","trajanjemin":85,"ime":"Lucija","prezime":"Grgić"}, 
- {"id":10,"naziv":"Blues večer","datum":"2025-10-25","vrijeme":"20:00:00","lokacija":"Zagreb","unutarnjivanjski":"Unutarnji","glazbenagrupa":"Blues Masters","zanr":"Blues","trajanjemin":105,"ime":"Karlo","prezime":"Soldo"}]
+{
+  "koncerti": [
+    {
+      "koncert_id": 4,
+      "naziv": "Klasični koncert",
+      "datum": "2025-10-01",
+      "vrijeme": "18:00:00",
+      "lokacija": "Osijek",
+      "unutarnjivanjski": "Unutarnji",
+      "glazbenagrupa": "Simfonijski orkestar",
+      "zanr": "Klasika",
+      "trajanjemin": 75,
+      "izvodaci": [
+        {
+          "izvodac_id": 6,
+          "ime": "Maja",
+          "prezime": "Šimić"
+        }
+      ]
+    },
+    {
+      "koncert_id": 10,
+      "naziv": "Blues večer",
+      "datum": "2025-10-25",
+      "vrijeme": "20:00:00",
+      "lokacija": "Zagreb",
+      "unutarnjivanjski": "Unutarnji",
+      "glazbenagrupa": "Blues Masters",
+      "zanr": "Blues",
+      "trajanjemin": 105,
+      "izvodaci": [
+        {
+          "izvodac_id": 15,
+          "ime": "Karlo",
+          "prezime": "Soldo"
+        }
+      ]
+    },
+    {
+      "koncert_id": 9,
+      "naziv": "Hip-hop party",
+      "datum": "2025-09-30",
+      "vrijeme": "21:30:00",
+      "lokacija": "Karlovac",
+      "unutarnjivanjski": "Unutarnji",
+      "glazbenagrupa": "The Rap Crew",
+      "zanr": "Hip-hop",
+      "trajanjemin": 85,
+      "izvodaci": [
+        {
+          "izvodac_id": 13,
+          "ime": "Dino",
+          "prezime": "Vuković"
+        },
+        {
+          "izvodac_id": 14,
+          "ime": "Lucija",
+          "prezime": "Grgić"
+        }
+      ]
+    },
+    {
+      "koncert_id": 7,
+      "naziv": "Rock maraton",
+      "datum": "2025-07-25",
+      "vrijeme": "20:00:00",
+      "lokacija": "Varaždin",
+      "unutarnjivanjski": "Vanjski",
+      "glazbenagrupa": "Rock Legends",
+      "zanr": "Rock",
+      "trajanjemin": 130,
+      "izvodaci": [
+        {
+          "izvodac_id": 10,
+          "ime": "Ema",
+          "prezime": "Lončar"
+        },
+        {
+          "izvodac_id": 11,
+          "ime": "David",
+          "prezime": "Perić"
+        }
+      ]
+    },
+    {
+      "koncert_id": 6,
+      "naziv": "Folk večer",
+      "datum": "2025-11-10",
+      "vrijeme": "20:30:00",
+      "lokacija": "Zadar",
+      "unutarnjivanjski": "Unutarnji",
+      "glazbenagrupa": "Tamburaški sastav",
+      "zanr": "Folk",
+      "trajanjemin": 95,
+      "izvodaci": [
+        {
+          "izvodac_id": 9,
+          "ime": "Filip",
+          "prezime": "Knežević"
+        }
+      ]
+    },
+    {
+      "koncert_id": 3,
+      "naziv": "Pop spektakl",
+      "datum": "2025-09-15",
+      "vrijeme": "21:00:00",
+      "lokacija": "Rijeka",
+      "unutarnjivanjski": "Unutarnji",
+      "glazbenagrupa": "Pop Stars",
+      "zanr": "Pop",
+      "trajanjemin": 110,
+      "izvodaci": [
+        {
+          "izvodac_id": 4,
+          "ime": "Petra",
+          "prezime": "Jurić"
+        },
+        {
+          "izvodac_id": 5,
+          "ime": "Luka",
+          "prezime": "Radić"
+        }
+      ]
+    },
+    {
+      "koncert_id": 1,
+      "naziv": "Ljetni festival",
+      "datum": "2025-07-12",
+      "vrijeme": "20:00:00",
+      "lokacija": "Zagreb",
+      "unutarnjivanjski": "Unutarnji",
+      "glazbenagrupa": "Električni orgazam",
+      "zanr": "Rock",
+      "trajanjemin": 120,
+      "izvodaci": [
+        {
+          "izvodac_id": 1,
+          "ime": "Marko",
+          "prezime": "Horvat"
+        },
+        {
+          "izvodac_id": 2,
+          "ime": "Ana",
+          "prezime": "Kovač"
+        }
+      ]
+    },
+    {
+      "koncert_id": 5,
+      "naziv": "Elektronski festival",
+      "datum": "2025-06-20",
+      "vrijeme": "22:00:00",
+      "lokacija": "Pula",
+      "unutarnjivanjski": "Vanjski",
+      "glazbenagrupa": "DJ Pulse",
+      "zanr": "Elektronska",
+      "trajanjemin": 150,
+      "izvodaci": [
+        {
+          "izvodac_id": 7,
+          "ime": "Tomislav",
+          "prezime": "Novak"
+        },
+        {
+          "izvodac_id": 8,
+          "ime": "Iva",
+          "prezime": "Marić"
+        }
+      ]
+    },
+    {
+      "koncert_id": 2,
+      "naziv": "Jazz noć",
+      "datum": "2025-08-05",
+      "vrijeme": "19:30:00",
+      "lokacija": "Split",
+      "unutarnjivanjski": "Vanjski",
+      "glazbenagrupa": "Blue Note Band",
+      "zanr": "Jazz",
+      "trajanjemin": 90,
+      "izvodaci": [
+        {
+          "izvodac_id": 3,
+          "ime": "Ivan",
+          "prezime": "Babić"
+        }
+      ]
+    },
+    {
+      "koncert_id": 8,
+      "naziv": "Indie vikend",
+      "datum": "2025-08-12",
+      "vrijeme": "19:00:00",
+      "lokacija": "Šibenik",
+      "unutarnjivanjski": "Vanjski",
+      "glazbenagrupa": "Indie Vibes",
+      "zanr": "Indie",
+      "trajanjemin": 100,
+      "izvodaci": [
+        {
+          "izvodac_id": 12,
+          "ime": "Marina",
+          "prezime": "Zorić"
+        }
+      ]
+    }
+  ]
 }
