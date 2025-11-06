@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Koncert baza - tablica</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+</head>
+
+<body>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Zanr</th>
+                <th>Naziv</th>
+                <!--<th>Position</th>
+                <th>Office</th>-->
+            </tr>
+        </thead>
+    </table>
+
+    <label>Zanr: <input type="text" id="filterZanr"></label>
+    <label>Naziv: <input type="text" id="filterNaziv"></label>
+    <button id="filterButton">Filter</button>
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        var table = $('#example').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: 'http://localhost:8000/v1/koncert',  // Your REST API URL
+                data: function (d) {
+                    // Add custom query params from input fields to the ajax request
+                    d.naziv = $('#filterZanr').val();
+                    d.zanr = $('#filterNaziv').val();
+                }
+            },
+            columns: [
+                {data: 'zanr'},
+                {data: 'naziv'},
+                //{data: 'position'},
+                //{data: 'office'}
+            ]
+        });
+
+        $('#filterButton').on('click', function () {
+            table.ajax.reload(); // Reload table data with new filters
+        });
+    });
+</script>
+
+</html>

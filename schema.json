@@ -1,0 +1,72 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$id": "https://plecko.fer.hr/koncert.schema.json",
+    "title": "Koncert",
+    "description": "Koncert koji se odvio",
+    "type": "object",
+    "properties": {
+        "koncert_id": {
+            "type": "integer"
+        },
+        "naziv": {
+            "type": "string"
+        },
+        "datum": {
+            "type": "string"
+        },
+        "vrijeme": {
+            "type": "string"
+        },
+        "lokacija": {
+            "type": "string"
+        },
+        "unutarnjivanjski": {
+            "type": "string"
+        },
+        "glazbenagrupa": {
+            "type": "string"
+        },
+        "zanr": {
+            "type": "string"
+        },
+        "trajanjemin": {
+            "type": "integer"
+        },
+        "izvodaci": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "izvodac_id": {
+                            "type": "integer"
+                        },
+                        "ime": {
+                            "type": "string"
+                        },
+                        "prezime": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "izvodac_id",
+                        "ime",
+                        "prezime"
+                    ]
+                }
+            ]
+        }
+    },
+    "requried": [
+        "koncert_id",
+        "naziv",
+        "datum",
+        "vrijeme",
+        "lokacija",
+        "unutarnjivanjski",
+        "glazbenagrupa",
+        "zanr",
+        "trajanjemin",
+        "izvodaci"
+    ]
+}

@@ -4,7 +4,19 @@ Autor: Dino Plečko
 Verzija: 1.0
 Jezik: Hrvatski
 
-Podatci su formata:
+# Pokretanje aplikacije
+## backend
+pokrenuti python virutalno okruzenje iz .venv direktorija (https://docs.python.org/3/library/venv.html#how-venvs-work)
+pokrenuti api:
+```bash
+fastapi dev main.py
+```
+## frontend
+```bash
+python -m http.server 3000
+```
+
+# Format podataka
 - ID
 - Naziv
 - Datum
