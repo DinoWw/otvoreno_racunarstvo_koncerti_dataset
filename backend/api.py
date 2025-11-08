@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 import psycopg2.extras
@@ -48,21 +48,17 @@ def sanitize(input: str) :
     return psycopg2.extensions.adapt(input).getquoted()
 
 
-def raw_koncert(wild: str = "", zanr: str = "", naziv: str = ""):
+def raw_koncert(filter_by: str = "", filter_for: str = ""):
     #wild = sanitize(wild);
     #zanr = sanitize(zanr);
     #naziv = sanitize(naziv);
     command = f"SELECT * FROM Concerts "
-    if zanr != "":
-        command += f" WHERE zanr LIKE '%{zanr}%' "
-    elif naziv != "":
-        command += f" WHERE naziv LIKE '%{naziv}%' "
-    elif wild != "":
-        # TODO wild search
-        command += f" WHERE naziv LIKE '%{wild}%' "
+    if filter_for == "wild" and filter_by != "":
+        command +="" # TODO
+    elif filter_for != "" and filter_by != "":
+        command += f" WHERE {filter_by} LIKE '%{filter_for}%' "
     else:
         command += ""
-
     command += ";"
     cur.execute(command)
     records = cur.fetchall()
@@ -70,9 +66,9 @@ def raw_koncert(wild: str = "", zanr: str = "", naziv: str = ""):
 
 apirouter = APIRouter()
 
-@app.get("/v1/koncert")
-async def koncert(draw:int = 0, wild: str = "", zanr: str = "", naziv: str = ""):
-    records = raw_koncert(wild, zanr, naziv)
+@apirouter.get("/koncert")
+async def koncert(draw:int = 0, filter_by: str = "", filter_for: str = ""):
+    records = raw_koncert(filter_by, filter_for)
     res = {
             "draw":draw,
             "recordsTotal":len(records),
@@ -81,9 +77,9 @@ async def koncert(draw:int = 0, wild: str = "", zanr: str = "", naziv: str = "")
             }
     return res;
 
-@app.get("/v1/koncert_json")
-async def koncert_json(wild: str = "", zanr: str = "", naziv: str = ""):
-    data = raw_koncert()
+@apirouter.get("/koncert_json")
+async def koncert_json(filter_by: str = "", filter_for: str = ""):
+    data = raw_koncert(filter_by, filter_for)
     json_content = json.dumps(data, default=json_default, ensure_ascii=False, indent=2)
     
     headers = {
@@ -92,9 +88,9 @@ async def koncert_json(wild: str = "", zanr: str = "", naziv: str = ""):
     
     return Response(content=json_content, media_type="application/json", headers=headers)
 
-@app.get("/v1/koncert_csv")
-async def koncert_csv(wild: str = "", zanr: str = "", naziv: str = ""):
-    data = raw_koncert(wild, zanr, naziv);
+@apirouter.get("/koncert_csv")
+async def koncert_csv(filter_by: str = "", filter_for: str = ""):
+    data = raw_koncert(filter_by, filter_for);
 
     fieldnames = list(data[0].keys())
 
@@ -110,4 +106,4 @@ async def koncert_csv(wild: str = "", zanr: str = "", naziv: str = ""):
 
     return StreamingResponse(output, media_type="text/csv", headers=headers)
 
-app.include_router(apirouter, prefix="v1");
+app.include_router(apirouter, prefix="/v2");

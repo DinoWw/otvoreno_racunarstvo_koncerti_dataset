@@ -5,10 +5,15 @@ Verzija: 1.0
 Jezik: Hrvatski
 
 # Pokretanje aplikacije
+## baza
+```bash
+docker compose up --detach
+```
 ## backend
-pokrenuti python virutalno okruzenje iz .venv direktorija (https://docs.python.org/3/library/venv.html#how-venvs-work)
+pokrenuti python virutalno okruzenje iz backend/.venv direktorija (https://docs.python.org/3/library/venv.html#how-venvs-work)
 pokrenuti api:
 ```bash
+cd backend
 fastapi dev main.py
 ```
 ## frontend

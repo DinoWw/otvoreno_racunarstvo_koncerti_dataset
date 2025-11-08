@@ -10,49 +10,75 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+    <meta name="title" content="Koncerti">
+    <meta name="description" content="otvoreni podatci o koncertima">
+    <meta name="author" content="Dino Plečko">
 </head>
 
 <body>
-    <table id="example" class="display" style="width:100%">
+    <a href="./index.html"> INDEX </a>
+    <table id="table" class="display" style="width:100%">
         <thead>
-            <tr>
-                <th>Zanr</th>
-                <th>Naziv</th>
-                <!--<th>Position</th>
-                <th>Office</th>-->
+            <tr id="top-row">
             </tr>
         </thead>
     </table>
-
-    <label>Zanr: <input type="text" id="filterZanr"></label>
-    <label>Naziv: <input type="text" id="filterNaziv"></label>
+    <label> Kategorija:
+        <select id="filterBy">
+        </select>
+    </label>
+    <label>Pretazi: <input type="text" id="filterFor"></label>
     <button id="filterButton">Filter</button>
+    <br>
+    <a id="csvDownload" href=http://localhost:8000/koncerti_csv> download csv </a>
+    <br>
+    <a id="jsonDownload" href=http://localhost:8000/koncerti_csv> download json </a>
 </body>
 
 <script>
+    const url_prefix = "http://localhost:8000/v2"
+    const optionsList = ["naziv", "datum", "vrijeme", "lokacija", "unutarnjivanjski", "glazbenagrupa", "zanr"];//, "wild"];
+    const selectElement = document.getElementById("filterBy");
+    const tableElement = document.getElementById("top-row");
+
+    optionsList.forEach(optionText => {
+        const option = document.createElement("option");
+        option.value = optionText;
+        option.textContent = optionText;
+        selectElement.appendChild(option);
+        const th = document.createElement("th");
+        th.textContent = optionText;
+        tableElement.appendChild(th);
+    });
 
     $(document).ready(function () {
-        var table = $('#example').DataTable({
+
+
+        var table = $('#table').DataTable({
             processing: true,
             serverSide: true,
+            searching: false,
             ajax: {
-                url: 'http://localhost:8000/v1/koncert',  // Your REST API URL
+                url: `${url_prefix}/koncert`,
                 data: function (d) {
-                    // Add custom query params from input fields to the ajax request
-                    d.naziv = $('#filterZanr').val();
-                    d.zanr = $('#filterNaziv').val();
+                    d.filter_by = $('#filterBy').val();
+                    d.filter_for = $('#filterFor').val();
                 }
             },
-            columns: [
-                {data: 'zanr'},
-                {data: 'naziv'},
-                //{data: 'position'},
-                //{data: 'office'}
-            ]
+            columns:
+                optionsList.map((colName) => {return {data: colName}})
         });
 
         $('#filterButton').on('click', function () {
-            table.ajax.reload(); // Reload table data with new filters
+            // reload table
+            table.ajax.reload();
+
+            fby = $('#filterBy').val();
+            ffor = $('#filterFor').val();
+
+            //change button href parameters
+            $('#csvDownload').attr("href", `${url_prefix}/koncert_csv?filter_by=${fby}&filter_for=${ffor}`)
+            $('#jsonDownload').attr("href", `${url_prefix}/koncert_json?filter_by=${fby}&filter_for=${ffor}`)
         });
     });
 </script>
