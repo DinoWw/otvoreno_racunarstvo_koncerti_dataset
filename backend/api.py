@@ -56,18 +56,21 @@ def raw_koncert(filter_by: str = "", filter_for: str = ""):
     command += " JOIN Concert_Izvodaci ci ON c.ID = ci.ConcertID "
     command += "JOIN Izvodaci i "
     command += "on i.izvodacId = ci.IzvodacID "
+    if filter_for != "" and filter_by == "wild":
+        columns = ["naziv", "datum", "vrijeme", "lokacija", 
+                   "unutarnjivanjski", "glazbenagrupa", "zanr", "trajanjemin"]
+        conditions = " OR ".join([f"c.{col}::text LIKE '%{filter_for}%'" for col in columns])
+        command += f" WHERE ({conditions}) "
+    elif filter_for != "" and filter_by != "":
+        command += f" WHERE {filter_by} LIKE '%{filter_for}%' "
+    else:
+        command += ""
     command += "GROUP BY    "
     command += "ci.ConcertId,   "
     command += "ci.izvodacId,   "
     command += "i.izvodacId,   "
     command += "c.ID,   "
     command += "c.Naziv "
-    if filter_for == "wild" and filter_by != "":
-        command +="" # TODO
-    elif filter_for != "" and filter_by != "":
-        command += f" WHERE {filter_by} LIKE '%{filter_for}%' "
-    else:
-        command += ""
 
     command += ";"
     cur.execute(command)

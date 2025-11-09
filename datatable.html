@@ -37,18 +37,23 @@
 
 <script>
     const url_prefix = "http://localhost:8000/v2"
-    const optionsList = ["naziv", "datum", "vrijeme", "lokacija", "unutarnjivanjski", "glazbenagrupa", "zanr"];//, "wild"];
+    const columnList = ["naziv", "datum", "vrijeme", "lokacija", 
+        "unutarnjivanjski", "glazbenagrupa", "zanr", "ime", "prezime"];
+    const optionsList = ["naziv", "datum", "vrijeme", "lokacija", 
+        "unutarnjivanjski", "glazbenagrupa", "zanr", "ime", "prezime", "wild"];
     const selectElement = document.getElementById("filterBy");
     const tableElement = document.getElementById("top-row");
 
+    columnList.forEach(optionText => {
+        const th = document.createElement("th");
+        th.textContent = optionText;
+        tableElement.appendChild(th);
+    });
     optionsList.forEach(optionText => {
         const option = document.createElement("option");
         option.value = optionText;
         option.textContent = optionText;
         selectElement.appendChild(option);
-        const th = document.createElement("th");
-        th.textContent = optionText;
-        tableElement.appendChild(th);
     });
 
     $(document).ready(function () {
@@ -66,7 +71,7 @@
                 }
             },
             columns:
-                optionsList.map((colName) => {return {data: colName}})
+                columnList.map((colName) => {return {data: colName}})
         });
 
         $('#filterButton').on('click', function () {
