@@ -1,0 +1,1020 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "FastAPI",
+        "contact": {
+            "name": "Dino Plečko",
+            "email": "dino.plecko@fer.hr"
+        },
+        "license": {
+            "name": "CC BY-SA 4.0",
+            "info": "https://creativecommons.org/licenses/by-sa/4.0/"
+        },
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/api/v1/performers": {
+            "get": {
+                "summary": "Rest Performers All",
+                "operationId": "rest_performers_all_api_v1_performers_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_List_PerformerOutput__"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/performers/{pid}": {
+            "get": {
+                "summary": "Rest Performers All",
+                "operationId": "rest_performers_all_api_v1_performers__pid__get",
+                "parameters": [
+                    {
+                        "name": "pid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "title": "Pid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_PerformerOutput_"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/concerts": {
+            "get": {
+                "summary": "Rest Concerts All",
+                "operationId": "rest_concerts_all_api_v1_concerts_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_List_ConcertOutput__"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Rest Concert Add",
+                "operationId": "rest_concert_add_api_v1_concerts_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConcertCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_ConcertUnlinkedOutput_"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/concerts/{cid}": {
+            "get": {
+                "summary": "Rest Concert By Id",
+                "operationId": "rest_concert_by_id_api_v1_concerts__cid__get",
+                "parameters": [
+                    {
+                        "name": "cid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Cid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_ConcertOutput_"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Concert",
+                "operationId": "delete_concert_api_v1_concerts__cid__delete",
+                "parameters": [
+                    {
+                        "name": "cid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Cid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_ConcertOutput_"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update Concert",
+                "operationId": "update_concert_api_v1_concerts__cid__put",
+                "parameters": [
+                    {
+                        "name": "cid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Cid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConcertCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_ConcertUnlinkedOutput_"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/concerts/{cid}/izvodaci": {
+            "get": {
+                "summary": "List Performers In Concert",
+                "operationId": "list_performers_in_concert_api_v1_concerts__cid__izvodaci_get",
+                "parameters": [
+                    {
+                        "name": "cid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Cid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_List_PerformerUnlinkedOutput__"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapper_NoneType_"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/openapi.json": {
+            "get": {
+                "summary": "Openapi Json",
+                "operationId": "openapi_json_api_v1_openapi_json_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Concert": {
+                "properties": {
+                    "id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Id"
+                    },
+                    "naziv": {
+                        "type": "string",
+                        "title": "Naziv"
+                    },
+                    "datum": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Datum"
+                    },
+                    "vrijeme": {
+                        "type": "string",
+                        "format": "time",
+                        "title": "Vrijeme"
+                    },
+                    "lokacija": {
+                        "type": "string",
+                        "title": "Lokacija"
+                    },
+                    "unutarnjivanjski": {
+                        "type": "string",
+                        "title": "Unutarnjivanjski"
+                    },
+                    "glazbenagrupa": {
+                        "type": "string",
+                        "title": "Glazbenagrupa"
+                    },
+                    "zanr": {
+                        "type": "string",
+                        "title": "Zanr"
+                    },
+                    "trajanjemin": {
+                        "type": "integer",
+                        "title": "Trajanjemin"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "naziv",
+                    "datum",
+                    "vrijeme",
+                    "lokacija",
+                    "unutarnjivanjski",
+                    "glazbenagrupa",
+                    "zanr",
+                    "trajanjemin"
+                ],
+                "title": "Concert"
+            },
+            "ConcertCreate": {
+                "properties": {
+                    "naziv": {
+                        "type": "string",
+                        "title": "Naziv"
+                    },
+                    "datum": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Datum"
+                    },
+                    "vrijeme": {
+                        "type": "string",
+                        "format": "time",
+                        "title": "Vrijeme"
+                    },
+                    "lokacija": {
+                        "type": "string",
+                        "title": "Lokacija"
+                    },
+                    "unutarnjivanjski": {
+                        "type": "string",
+                        "title": "Unutarnjivanjski"
+                    },
+                    "glazbenagrupa": {
+                        "type": "string",
+                        "title": "Glazbenagrupa"
+                    },
+                    "zanr": {
+                        "type": "string",
+                        "title": "Zanr"
+                    },
+                    "trajanjemin": {
+                        "type": "integer",
+                        "title": "Trajanjemin"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "naziv",
+                    "datum",
+                    "vrijeme",
+                    "lokacija",
+                    "unutarnjivanjski",
+                    "glazbenagrupa",
+                    "zanr",
+                    "trajanjemin"
+                ],
+                "title": "ConcertCreate"
+            },
+            "ConcertOutput": {
+                "properties": {
+                    "id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Id"
+                    },
+                    "naziv": {
+                        "type": "string",
+                        "title": "Naziv"
+                    },
+                    "datum": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Datum"
+                    },
+                    "vrijeme": {
+                        "type": "string",
+                        "format": "time",
+                        "title": "Vrijeme"
+                    },
+                    "lokacija": {
+                        "type": "string",
+                        "title": "Lokacija"
+                    },
+                    "unutarnjivanjski": {
+                        "type": "string",
+                        "title": "Unutarnjivanjski"
+                    },
+                    "glazbenagrupa": {
+                        "type": "string",
+                        "title": "Glazbenagrupa"
+                    },
+                    "zanr": {
+                        "type": "string",
+                        "title": "Zanr"
+                    },
+                    "trajanjemin": {
+                        "type": "integer",
+                        "title": "Trajanjemin"
+                    },
+                    "izvodaci": {
+                        "items": {
+                            "$ref": "#/components/schemas/Performer"
+                        },
+                        "type": "array",
+                        "title": "Izvodaci"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "naziv",
+                    "datum",
+                    "vrijeme",
+                    "lokacija",
+                    "unutarnjivanjski",
+                    "glazbenagrupa",
+                    "zanr",
+                    "trajanjemin",
+                    "izvodaci"
+                ],
+                "title": "ConcertOutput"
+            },
+            "ConcertUnlinkedOutput": {
+                "properties": {
+                    "id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Id"
+                    },
+                    "naziv": {
+                        "type": "string",
+                        "title": "Naziv"
+                    },
+                    "datum": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Datum"
+                    },
+                    "vrijeme": {
+                        "type": "string",
+                        "format": "time",
+                        "title": "Vrijeme"
+                    },
+                    "lokacija": {
+                        "type": "string",
+                        "title": "Lokacija"
+                    },
+                    "unutarnjivanjski": {
+                        "type": "string",
+                        "title": "Unutarnjivanjski"
+                    },
+                    "glazbenagrupa": {
+                        "type": "string",
+                        "title": "Glazbenagrupa"
+                    },
+                    "zanr": {
+                        "type": "string",
+                        "title": "Zanr"
+                    },
+                    "trajanjemin": {
+                        "type": "integer",
+                        "title": "Trajanjemin"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "naziv",
+                    "datum",
+                    "vrijeme",
+                    "lokacija",
+                    "unutarnjivanjski",
+                    "glazbenagrupa",
+                    "zanr",
+                    "trajanjemin"
+                ],
+                "title": "ConcertUnlinkedOutput"
+            },
+            "Performer": {
+                "properties": {
+                    "izvodacid": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Izvodacid"
+                    },
+                    "ime": {
+                        "type": "string",
+                        "title": "Ime"
+                    },
+                    "prezime": {
+                        "type": "string",
+                        "title": "Prezime"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "ime",
+                    "prezime"
+                ],
+                "title": "Performer"
+            },
+            "PerformerOutput": {
+                "properties": {
+                    "izvodacid": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Izvodacid"
+                    },
+                    "ime": {
+                        "type": "string",
+                        "title": "Ime"
+                    },
+                    "prezime": {
+                        "type": "string",
+                        "title": "Prezime"
+                    },
+                    "koncerti": {
+                        "items": {
+                            "$ref": "#/components/schemas/Concert"
+                        },
+                        "type": "array",
+                        "title": "Koncerti"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "ime",
+                    "prezime",
+                    "koncerti"
+                ],
+                "title": "PerformerOutput"
+            },
+            "PerformerUnlinkedOutput": {
+                "properties": {
+                    "izvodacid": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Izvodacid"
+                    },
+                    "ime": {
+                        "type": "string",
+                        "title": "Ime"
+                    },
+                    "prezime": {
+                        "type": "string",
+                        "title": "Prezime"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "ime",
+                    "prezime"
+                ],
+                "title": "PerformerUnlinkedOutput"
+            },
+            "ResponseWrapper_ConcertOutput_": {
+                "properties": {
+                    "response": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ConcertOutput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "errors": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Errors",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "response"
+                ],
+                "title": "ResponseWrapper[ConcertOutput]"
+            },
+            "ResponseWrapper_ConcertUnlinkedOutput_": {
+                "properties": {
+                    "response": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ConcertUnlinkedOutput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "errors": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Errors",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "response"
+                ],
+                "title": "ResponseWrapper[ConcertUnlinkedOutput]"
+            },
+            "ResponseWrapper_List_ConcertOutput__": {
+                "properties": {
+                    "response": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/ConcertOutput"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Response"
+                    },
+                    "errors": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Errors",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "response"
+                ],
+                "title": "ResponseWrapper[List[ConcertOutput]]"
+            },
+            "ResponseWrapper_List_PerformerOutput__": {
+                "properties": {
+                    "response": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/PerformerOutput"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Response"
+                    },
+                    "errors": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Errors",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "response"
+                ],
+                "title": "ResponseWrapper[List[PerformerOutput]]"
+            },
+            "ResponseWrapper_List_PerformerUnlinkedOutput__": {
+                "properties": {
+                    "response": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/PerformerUnlinkedOutput"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Response"
+                    },
+                    "errors": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Errors",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "response"
+                ],
+                "title": "ResponseWrapper[List[PerformerUnlinkedOutput]]"
+            },
+            "ResponseWrapper_NoneType_": {
+                "properties": {
+                    "response": {
+                        "type": "null",
+                        "title": "Response"
+                    },
+                    "errors": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Errors",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "response"
+                ],
+                "title": "ResponseWrapper[NoneType]"
+            },
+            "ResponseWrapper_PerformerOutput_": {
+                "properties": {
+                    "response": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/PerformerOutput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "errors": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Errors",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "response"
+                ],
+                "title": "ResponseWrapper[PerformerOutput]"
+            }
+        }
+    }
+}

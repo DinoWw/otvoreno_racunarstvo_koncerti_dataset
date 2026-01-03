@@ -4,6 +4,10 @@ Autor: Dino Plečko
 Verzija: 1.0
 Jezik: Hrvatski
 
+# API
+Aplikacija dok je pokrenuta izlaže i REST API.
+OpenAPI specifikacija može se naći na krajnjoj točci /v1/openapi.json ili u korjenskom direktoriju repozitorija.
+
 # Pokretanje aplikacije
 ## baza
 ```bash
