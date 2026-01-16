@@ -42,6 +42,7 @@ app = FastAPI(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 origins = [
+    "http://localhost",
     "http://localhost:3000",
     "http://localhost:5500",
     "null",
@@ -385,11 +386,11 @@ AUTH0_DOMAIN = "dev-jwwezawel3fx5fi3.us.auth0.com"
 ALGORITHMS = ["RS256"]
 AUTH0_AUTHORIZE_URL = f"https://{AUTH0_DOMAIN}/authorize"
 TOKEN_URL = f"https://{AUTH0_DOMAIN}/oauth/token"
-REDIRECT_URI = "http://localhost:8000/api/v1/callback"
+REDIRECT_URI = "http://localhost/api/v1/callback"
 CLIENT_ID = "2serRACHH06czdEmSKSXRRRL434ChbQe"
 CLIENT_SECRET = "7FdCOntzDvJmshp-5sTsRMkNPAmspw0KQmVDq-Ka-zFbG8Ojvl2mEmjMKFXrpJyi" # if you find this on github, good for you
 AUDIENCE = "https://dev-jwwezawel3fx5fi3.us.auth0.com/api/v2/"
-API_AUDIENCE = "http://localhost:8000"
+API_AUDIENCE = "http://localhost"
 SCOPE = "openid profile email"
 
 @authrouter.get("/authorize")
@@ -521,7 +522,7 @@ async def callback(request: Request, code: str = None, state: str = None):
         print(token_resp.status_code)
         print(token_resp.text)
     # 4️⃣ Save tokens in secure cookie / session
-    response = RedirectResponse(url="/dashboard")
+    response = RedirectResponse(url="/")
     response.set_cookie(
         key="access_token",
         value=token_data["access_token"],

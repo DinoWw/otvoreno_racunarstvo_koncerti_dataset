@@ -20,9 +20,10 @@ pokrenuti api:
 cd backend
 fastapi dev main.py
 ```
-## frontend
+## reverse proxy and frontend
+in the project root directory, run:
 ```bash
-python -m http.server 3000
+caddy run
 ```
 
 # Format podataka

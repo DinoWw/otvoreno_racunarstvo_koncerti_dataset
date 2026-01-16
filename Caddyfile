@@ -1,0 +1,8 @@
+:80 {
+    handle /api/v1/* {
+        reverse_proxy :8000
+    }
+    handle {
+        file_server
+    }
+}
