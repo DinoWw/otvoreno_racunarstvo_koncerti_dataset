@@ -9,7 +9,7 @@ Aplikacija dok je pokrenuta izlaže i REST API.
 OpenAPI specifikacija može se naći na krajnjoj točci /v1/openapi.json ili u korjenskom direktoriju repozitorija.
 
 # Pokretanje aplikacije
-## baza
+## baza podataka
 ```bash
 docker compose up --detach
 ```

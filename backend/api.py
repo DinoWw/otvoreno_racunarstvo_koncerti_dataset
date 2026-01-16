@@ -1,6 +1,11 @@
-from fastapi import FastAPI, APIRouter, Request, HTTPException, status
-from fastapi.responses import StreamingResponse, JSONResponse, Response
+from fastapi import FastAPI, APIRouter, Request, HTTPException, status, Depends
+from fastapi.responses import StreamingResponse, JSONResponse, Response, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer
+
+from jose import jwt
+
+from urllib.parse import urlencode
 
 import psycopg2
 import psycopg2.extras
@@ -12,14 +17,17 @@ from sqlalchemy.orm import selectinload, joinedload
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
 
+import httpx
+import base64
+import hashlib
+import secrets
 import csv
 import json
 import io
 
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
 from pydantic import Field as PydanticField
-from typing import List, Generic, TypeVar, Optional
-
+from typing import List, Generic, TypeVar, Optional, Annotated
 app = FastAPI(
     contact= {
         "name": "Dino Plečko",
@@ -30,6 +38,8 @@ app = FastAPI(
         "info": "https://creativecommons.org/licenses/by-sa/4.0/"
     }
 )
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 origins = [
     "http://localhost:3000",
@@ -99,6 +109,7 @@ def raw_koncert(filter_by: str = "", filter_for: str = ""):
 
 apirouter = APIRouter()
 restapirouter = APIRouter()
+authrouter = APIRouter()
 
 @apirouter.get("/koncert")
 async def koncert(draw:int = 0, filter_by: str = "", filter_for: str = ""):
@@ -262,7 +273,8 @@ async def http_exception_handler(
 ):
     return JSONResponse(
         status_code=exc.status_code,
-        content=ResponseWrapper( response=None, errors=[str(exc)] ).dict())
+        content=ResponseWrapper( response=None, errors=[str(exc)] ).dict(),
+        headers = exc.headers )
 
 @restapirouter.get("/performers", response_model=ResponseWrapper[List[PerformerOutput]], responses = ERROR_RESPONSES)
 async def rest_performers_all():
@@ -367,5 +379,186 @@ async def list_performers_in_concert(cid: int):
 async def openapi_json():
     return app.openapi()
 
+######################### OAUTH ######################### 
+
+AUTH0_DOMAIN = "dev-jwwezawel3fx5fi3.us.auth0.com"
+ALGORITHMS = ["RS256"]
+AUTH0_AUTHORIZE_URL = f"https://{AUTH0_DOMAIN}/authorize"
+TOKEN_URL = f"https://{AUTH0_DOMAIN}/oauth/token"
+REDIRECT_URI = "http://localhost:8000/api/v1/callback"
+CLIENT_ID = "2serRACHH06czdEmSKSXRRRL434ChbQe"
+CLIENT_SECRET = "7FdCOntzDvJmshp-5sTsRMkNPAmspw0KQmVDq-Ka-zFbG8Ojvl2mEmjMKFXrpJyi" # if you find this on github, good for you
+AUDIENCE = "https://dev-jwwezawel3fx5fi3.us.auth0.com/api/v2/"
+API_AUDIENCE = "http://localhost:8000"
+SCOPE = "openid profile email"
+
+@authrouter.get("/authorize")
+def get_current_user(request: Request):
+    auth_header = request.headers.get("Authorization")
+
+    if not auth_header:
+        # Redirect instead of 401
+        raise HTTPException(
+            status_code=302,
+            headers={"Location": f"https://{AUTH0_DOMAIN}/authorize"},
+        )
+
+    token = auth_header.split(" ")[1]
+
+    try:
+        payload = jwt.decode(
+            token,
+            key="PUBLIC_KEY_OR_JWKS",
+            audience=API_AUDIENCE,
+            issuer=f"https://{AUTH0_DOMAIN}/",
+            algorithms=ALGORITHMS,
+        )
+        return payload
+
+    except JWTError:
+        raise HTTPException(
+            status_code=302,
+            headers={"Location": "/login"},
+        )
+    return 0;
+
+def generate_pkce():
+    code_verifier = secrets.token_urlsafe(64)
+    challenge = hashlib.sha256(code_verifier.encode()).digest()
+    code_challenge = base64.urlsafe_b64encode(challenge).rstrip(b"=").decode()
+    return code_verifier, code_challenge
+
+@authrouter.get("/login")
+def login(request: Request):
+    # --- CSRF protection ---
+    state = secrets.token_urlsafe(32)
+
+    # --- PKCE ---
+    code_verifier, code_challenge = generate_pkce()
+
+    # Store state + verifier in a secure cookie or server-side session
+    response = RedirectResponse(
+        url=f"{AUTH0_AUTHORIZE_URL}?{urlencode({
+            'response_type': 'code',
+            'client_id': CLIENT_ID,
+            'redirect_uri': REDIRECT_URI,
+            'scope': SCOPE,
+            'audience': AUDIENCE,
+            'state': state,
+            'code_challenge': code_challenge,
+            'code_challenge_method': 'S256',
+        })}",
+        status_code=302,
+    )
+    print(f" url: ");
+    print(f"{AUTH0_AUTHORIZE_URL}?{urlencode({
+            'response_type': 'code',
+            'client_id': CLIENT_ID,
+            'redirect_uri': REDIRECT_URI,
+            'scope': SCOPE,
+            'audience': AUDIENCE,
+            'state': state,
+            'code_challenge': code_challenge,
+            'code_challenge_method': 'S256',
+        })}");
+
+    # --- Required security headers ---
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
+
+    # --- Store temporary auth data ---
+    response.set_cookie(
+        key="auth_state",
+        value=state,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=300,
+    )
+    response.set_cookie(
+        key="pkce_verifier",
+        value=code_verifier,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=300,
+    )
+
+    return response
+
+
+
+@authrouter.get("/callback")
+async def callback(request: Request, code: str = None, state: str = None):
+    # 6️⃣ Raw body (usually empty for GET callback)
+    body = await request.body()
+    print("Body:", body)
+
+    # 1️⃣ Verify state
+    saved_state = request.cookies.get("auth_state")
+    if state != saved_state:
+        print(f"state does not match saved state. state: {state}; saved_state: {saved_state}");
+        return RedirectResponse(url="/login")  # or error page
+
+    # 2️⃣ Get PKCE verifier
+    code_verifier = request.cookies.get("pkce_verifier")
+    print(request);
+    # 3️⃣ Exchange code for tokens
+    async with httpx.AsyncClient() as client:
+        token_resp = await client.post(
+            TOKEN_URL,
+            data={
+                "grant_type": "authorization_code",
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,  # required for Web App
+                "code": code,
+                "redirect_uri": REDIRECT_URI,
+                "code_verifier": code_verifier,
+            },
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+        token_data = token_resp.json()
+        print(token_resp.status_code)
+        print(token_resp.text)
+    # 4️⃣ Save tokens in secure cookie / session
+    response = RedirectResponse(url="/dashboard")
+    response.set_cookie(
+        key="access_token",
+        value=token_data["access_token"],
+        httponly=True,
+        secure=True,
+        samesite="lax",
+    )
+    response.set_cookie(
+        key="id_token",
+        value=token_data["id_token"],
+        httponly=True,
+        secure=True,
+        samesite="lax",
+    )
+
+    # Optional: remove temporary cookies
+    response.delete_cookie("auth_state")
+    response.delete_cookie("pkce_verifier")
+
+    return response
+
+@restapirouter.get("/protected")
+async def protected(token: Annotated[str, Depends(oauth2_scheme)]) :
+    return {"token": token}; 
+
+SECRET_KEY = "CHANGE_ME"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 15
+def create_access_token(subject: str, expires_delta: timedelta | None = None):
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
+    payload = {
+        "sub": subject,
+        "exp": expire,
+        "iat": datetime.utcnow(),
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
 app.include_router(apirouter, prefix="/v2", include_in_schema=False);
 app.include_router(restapirouter, prefix="/api/v1");
+app.include_router(authrouter, prefix="/api/v1");
