@@ -245,19 +245,23 @@ class Concert(SQLModel, table=True):
     __tablename__ = "concerts"
 
     id: int | None = Field(default=None, primary_key=True)
-    naziv: str
-    datum: date
-    vrijeme: time
-    lokacija: str
+    naziv: str = Field(alias="name")
+    datum: date = Field(alias="startDate")
+    vrijeme: time = Field(alias="doorTime")
+    lokacija: str = Field(alias="location")
     unutarnjivanjski: str
-    glazbenagrupa: str
+    glazbenagrupa: str = Field(alias="actor")
     zanr: str
-    trajanjemin: int
+    trajanjemin: int = Field(alias="duration")
 
     izvodaci: List["Performer"] = Relationship(
         back_populates="koncerti",
         link_model=ConcertPerformerLink
     )
+    model_config = {
+            "populate_by_name" : True,
+            "arbitrary_types_allowed" : True
+            }
 
 class ConcertCreate(SQLModel):
     naziv: str
@@ -280,46 +284,87 @@ class ConcertUnlinkedOutput(SQLModel):
     zanr: str
     trajanjemin: int
 
+class ConcertUnlinkedOutput(SQLModel):
+    id: int | None = Field(default=None, primary_key=True)
+    type_: str = Field(alias="@type", default="MusicEvent")
+    naziv: str = Field(alias="name")
+    datum: date = Field(alias="startDate")
+    vrijeme: time = Field(alias="doorTime")
+    lokacija: str = Field(alias="location")
+    unutarnjivanjski: str
+    glazbenagrupa: str = Field(alias="actor")
+    zanr: str
+    trajanjemin: int = Field(alias="duration")
+    model_config = {
+            "populate_by_name" : True,
+            "arbitrary_types_allowed" : True
+            }
+
 class ConcertOutput(SQLModel):
     id: int | None = Field(default=None, primary_key=True)
-    naziv: str
-    datum: date
-    vrijeme: time
-    lokacija: str
+    type_: str = Field(alias="@type", default="MusicEvent")
+    naziv: str = Field(alias="name")
+    datum: date = Field(alias="startDate")
+    vrijeme: time = Field(alias="doorTime")
+    lokacija: str = Field(alias="location")
     unutarnjivanjski: str
-    glazbenagrupa: str
+    glazbenagrupa: str = Field(alias="actor")
     zanr: str
-    trajanjemin: int
-    izvodaci: List["Performer"]
+    trajanjemin: int = Field(alias="duration")
+    izvodaci: List["PerformerUnlinkedOutput"]
+    model_config = {
+            "populate_by_name" : True,
+            "arbitrary_types_allowed" : True
+            }
 
 class Performer(SQLModel, table=True):
     __tablename__ = "izvodaci"
 
     izvodacid: int | None = Field(default=None, primary_key=True)
-    ime: str
-    prezime: str
+    ime: str = Field(alias="givenName")
+    prezime: str = Field(alias="familyName")
 
     koncerti: List["Concert"] = Relationship(
         back_populates="izvodaci",
         link_model = ConcertPerformerLink
     )
+    model_config = {
+            "populate_by_name" : True,
+            "arbitrary_types_allowed" : True
+            }
 
 class PerformerUnlinkedOutput(SQLModel):
     izvodacid: int | None = Field(default=None, primary_key=True)
-    ime: str
-    prezime: str
+    type_: str = Field(alias="@type", default="Person")
+    ime: str = Field(alias="givenName")
+    prezime: str = Field(alias="familyName")
+    model_config = {
+            "populate_by_name" : True,
+            "arbitrary_types_allowed" : True
+            }
 
 class PerformerOutput(SQLModel):
     izvodacid: int | None = Field(default=None, primary_key=True)
-    ime: str
-    prezime: str
-    koncerti: List["Concert"]
+    type_: str = Field(alias="@type", default="Person")
+    ime: str = Field(alias="givenName")
+    prezime: str = Field(alias="familyName")
+    koncerti: List["ConcertUnlinkedOutput"]
+    model_config = {
+            "populate_by_name" : True,
+            "arbitrary_types_allowed" : True
+            }
 
 DataT = TypeVar("DataT")
 
 class ResponseWrapper(GenericModel, Generic[DataT]):
+    context: str = Field(alias="@context", default="https://schema.org/")
     response: Optional[DataT]
     errors: List[str] = []
+
+    class Config:
+        validate_by_name = True
+        # This ensures alias is used when .json() is called
+        by_alias = True
 
 ERROR_RESPONSES = {
     404: {"model": ResponseWrapper[None], "description": "Not found"},
@@ -329,6 +374,13 @@ ERROR_RESPONSES = {
 
 def wrap(obj):
     return ResponseWrapper(response=obj)
+def wrapConcert(concert):
+    return wrap(concert)
+def wrapPerformer(poerformer):
+    return wrap(performer)
+
+class JSONLDResponse(JSONResponse):
+    media_type = "application/ld+json"
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
@@ -391,7 +443,7 @@ async def rest_concert_add(concert: ConcertCreate):
         session.add(db_concert)
         session.commit()
         session.refresh(db_concert)
-        return wrap(db_concert)
+        return wrapConcert(db_concert)
 
 @restapirouter.delete(
     "/concerts/{cid}",
@@ -408,7 +460,7 @@ async def delete_concert(cid: int):
         session.delete(concert)
         session.commit()
 
-        return wrap(concert)
+        return wrapConcert(concert)
 
 
 @restapirouter.put(
@@ -429,7 +481,7 @@ async def update_concert(cid: int, concert_update: ConcertCreate):
         session.commit()
         session.refresh(concert)
 
-        return wrap(concert)
+        return wrapConcert(concert)
 
 @restapirouter.get(
     "/concerts/{cid}/izvodaci",
@@ -444,7 +496,7 @@ async def list_performers_in_concert(cid: int):
         if concert is None:
             raise HTTPException(status_code=404, detail="Concert not found")
         
-        return wrap(concert.izvodaci)
+        return wrapPerformer(concert.izvodaci)
 
 @restapirouter.get("/openapi.json")
 async def openapi_json():
