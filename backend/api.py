@@ -1,9 +1,9 @@
 from fastapi import FastAPI, APIRouter, Request, HTTPException, status, Depends
 from fastapi.responses import StreamingResponse, JSONResponse, Response, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2AuthorizationCodeBearer
 
-from jose import jwt
+from jose import jwt, JWTError
 
 from urllib.parse import urlencode
 
@@ -17,6 +17,7 @@ from sqlalchemy.orm import selectinload, joinedload
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
 
+import requests
 import httpx
 import base64
 import hashlib
@@ -28,6 +29,9 @@ import io
 from datetime import date, datetime, time, timedelta
 from pydantic import Field as PydanticField
 from typing import List, Generic, TypeVar, Optional, Annotated
+
+import subprocess
+
 app = FastAPI(
     contact= {
         "name": "Dino Plečko",
@@ -39,7 +43,6 @@ app = FastAPI(
     }
 )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 origins = [
     "http://localhost",
@@ -66,7 +69,73 @@ conn = psycopg2.connect(
 conn.autocommit = True
 cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
+### OAUTH UTIL ###
 
+AUTH0_DOMAIN = "dev-jwwezawel3fx5fi3.us.auth0.com"
+ALGORITHMS = ["RS256"]
+AUTH0_AUTHORIZE_URL = f"https://{AUTH0_DOMAIN}/authorize"
+TOKEN_URL = f"https://{AUTH0_DOMAIN}/oauth/token"
+REDIRECT_URI = "http://localhost/api/v1/callback"
+CLIENT_ID = "2serRACHH06czdEmSKSXRRRL434ChbQe"
+CLIENT_SECRET = "7FdCOntzDvJmshp-5sTsRMkNPAmspw0KQmVDq-Ka-zFbG8Ojvl2mEmjMKFXrpJyi" # if you find this on github, good for you
+AUDIENCE = "https://dev-jwwezawel3fx5fi3.us.auth0.com/api/v2/"
+API_AUDIENCE = "http://localhost"
+SCOPE = "openid profile email"
+
+oauth2_scheme = OAuth2AuthorizationCodeBearer(
+    authorizationUrl=f"https://{AUTH0_DOMAIN}/authorize",
+    tokenUrl=f"https://{AUTH0_DOMAIN}/oauth/token"
+)
+
+# Fetch Auth0 public keys (JWKS)
+jwks_url = f"https://{AUTH0_DOMAIN}/.well-known/jwks.json"
+jwks = requests.get(jwks_url).json()
+
+async def get_jwks():
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(jwks_url)
+        resp.raise_for_status()
+        return resp.json()
+
+def get_token_from_cookie(request: Request) -> str:
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+        )
+    return token
+
+async def get_current_user(
+    request: Request,
+) -> dict:
+    token = get_token_from_cookie(request)
+    jwks = await get_jwks()
+
+    try:
+        unverified_header = jwt.get_unverified_header(token)
+        rsa_key = next(
+            key for key in jwks["keys"]
+            if key["kid"] == unverified_header["kid"]
+        )
+
+        payload = jwt.decode(
+            token,
+            rsa_key,
+            algorithms=ALGORITHMS,
+            audience=API_AUDIENCE,
+            issuer=f"https://{AUTH0_DOMAIN}/",
+        )
+        return payload  # contains sub, email, permissions, etc.
+
+    except StopIteration:
+        raise HTTPException(status_code=401, detail="Invalid token key")
+
+    except JWTError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+        )
 
 def json_default(obj):
     if isinstance(obj, (date, datetime)):
@@ -109,8 +178,9 @@ def raw_koncert(filter_by: str = "", filter_for: str = ""):
     return records
 
 apirouter = APIRouter()
-restapirouter = APIRouter()
+protectedrouter = APIRouter( dependencies=[Depends(get_current_user)] )
 authrouter = APIRouter()
+restapirouter = APIRouter()
 
 @apirouter.get("/koncert")
 async def koncert(draw:int = 0, filter_by: str = "", filter_for: str = ""):
@@ -381,20 +451,8 @@ async def openapi_json():
     return app.openapi()
 
 ######################### OAUTH ######################### 
-
-AUTH0_DOMAIN = "dev-jwwezawel3fx5fi3.us.auth0.com"
-ALGORITHMS = ["RS256"]
-AUTH0_AUTHORIZE_URL = f"https://{AUTH0_DOMAIN}/authorize"
-TOKEN_URL = f"https://{AUTH0_DOMAIN}/oauth/token"
-REDIRECT_URI = "http://localhost/api/v1/callback"
-CLIENT_ID = "2serRACHH06czdEmSKSXRRRL434ChbQe"
-CLIENT_SECRET = "7FdCOntzDvJmshp-5sTsRMkNPAmspw0KQmVDq-Ka-zFbG8Ojvl2mEmjMKFXrpJyi" # if you find this on github, good for you
-AUDIENCE = "https://dev-jwwezawel3fx5fi3.us.auth0.com/api/v2/"
-API_AUDIENCE = "http://localhost"
-SCOPE = "openid profile email"
-
 @authrouter.get("/authorize")
-def get_current_user(request: Request):
+def authorize(request: Request):
     auth_header = request.headers.get("Authorization")
 
     if not auth_header:
@@ -444,24 +502,13 @@ def login(request: Request):
             'client_id': CLIENT_ID,
             'redirect_uri': REDIRECT_URI,
             'scope': SCOPE,
-            'audience': AUDIENCE,
+            'audience': API_AUDIENCE,
             'state': state,
             'code_challenge': code_challenge,
             'code_challenge_method': 'S256',
         })}",
         status_code=302,
     )
-    print(f" url: ");
-    print(f"{AUTH0_AUTHORIZE_URL}?{urlencode({
-            'response_type': 'code',
-            'client_id': CLIENT_ID,
-            'redirect_uri': REDIRECT_URI,
-            'scope': SCOPE,
-            'audience': AUDIENCE,
-            'state': state,
-            'code_challenge': code_challenge,
-            'code_challenge_method': 'S256',
-        })}");
 
     # --- Required security headers ---
     response.headers["Cache-Control"] = "no-store"
@@ -503,7 +550,6 @@ async def callback(request: Request, code: str = None, state: str = None):
 
     # 2️⃣ Get PKCE verifier
     code_verifier = request.cookies.get("pkce_verifier")
-    print(request);
     # 3️⃣ Exchange code for tokens
     async with httpx.AsyncClient() as client:
         token_resp = await client.post(
@@ -544,22 +590,19 @@ async def callback(request: Request, code: str = None, state: str = None):
 
     return response
 
-@restapirouter.get("/protected")
-async def protected(token: Annotated[str, Depends(oauth2_scheme)]) :
-    return {"token": token}; 
+@authrouter.get("/protected")
+def private_endpoint(current_user: dict = Depends(get_current_user)):
+    return {"msg": "Only logged-in users can see this", "user": current_user}
 
-SECRET_KEY = "CHANGE_ME"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 15
-def create_access_token(subject: str, expires_delta: timedelta | None = None):
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
-    payload = {
-        "sub": subject,
-        "exp": expire,
-        "iat": datetime.utcnow(),
-    }
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+@protectedrouter.get("/refresh")
+def refreshExports() :
+    subprocess.run("../export.sh")
+
+@protectedrouter.get("/user")
+def userInfo(current_user: dict = Depends(get_current_user)) :
+    return current_user;
 
 app.include_router(apirouter, prefix="/v2", include_in_schema=False);
 app.include_router(restapirouter, prefix="/api/v1");
 app.include_router(authrouter, prefix="/api/v1");
+app.include_router(protectedrouter, prefix="/api/v1");

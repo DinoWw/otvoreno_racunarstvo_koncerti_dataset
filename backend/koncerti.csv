@@ -1,0 +1,16 @@
+id,naziv,datum,vrijeme,lokacija,unutarnjivanjski,glazbenagrupa,zanr,trajanjemin,ime,prezime
+1,Ljetni festival,2025-07-12,20:00:00,Zagreb,Unutarnji,Električni orgazam,Rock,120,Ana,Kovač
+1,Ljetni festival,2025-07-12,20:00:00,Zagreb,Unutarnji,Električni orgazam,Rock,120,Marko,Horvat
+2,Jazz noć,2025-08-05,19:30:00,Split,Vanjski,Blue Note Band,Jazz,90,Ivan,Babić
+3,Pop spektakl,2025-09-15,21:00:00,Rijeka,Unutarnji,Pop Stars,Pop,110,Luka,Radić
+3,Pop spektakl,2025-09-15,21:00:00,Rijeka,Unutarnji,Pop Stars,Pop,110,Petra,Jurić
+4,Klasični koncert,2025-10-01,18:00:00,Osijek,Unutarnji,Simfonijski orkestar,Klasika,75,Maja,Šimić
+5,Elektronski festival,2025-06-20,22:00:00,Pula,Vanjski,DJ Pulse,Elektronska,150,Iva,Marić
+5,Elektronski festival,2025-06-20,22:00:00,Pula,Vanjski,DJ Pulse,Elektronska,150,Tomislav,Novak
+6,Folk večer,2025-11-10,20:30:00,Zadar,Unutarnji,Tamburaški sastav,Folk,95,Filip,Knežević
+7,Rock maraton,2025-07-25,20:00:00,Varaždin,Vanjski,Rock Legends,Rock,130,David,Perić
+7,Rock maraton,2025-07-25,20:00:00,Varaždin,Vanjski,Rock Legends,Rock,130,Ema,Lončar
+8,Indie vikend,2025-08-12,19:00:00,Šibenik,Vanjski,Indie Vibes,Indie,100,Marina,Zorić
+9,Hip-hop party,2025-09-30,21:30:00,Karlovac,Unutarnji,The Rap Crew,Hip-hop,85,Dino,Vuković
+9,Hip-hop party,2025-09-30,21:30:00,Karlovac,Unutarnji,The Rap Crew,Hip-hop,85,Lucija,Grgić
+10,Blues večer,2025-10-25,20:00:00,Zagreb,Unutarnji,Blues Masters,Blues,105,Karlo,Soldo

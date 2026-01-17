@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="title" content="Koncerti">
+    <meta name="description" content="informacije o prijavljenom korisniku">
+    <meta name="author" content="Dino Plečko">
+
+    <title>Koncert baza</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="body">
+    <h1>Informacije o korisniku</h1>
+
+    <aside id="aside"></aside>
+
+    <div id="place">
+    </div>
+    <p>
+        Concert dataset © 2025 by Dino Plečko is licensed under CC BY-SA 4.0. To view a copy of this license, visit
+        https://creativecommons.org/licenses/by-sa/4.0/
+    </p>
+
+    <script>
+        fetch("/nav.html")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("aside").innerHTML = html;
+            });
+        fetch("/api/v1/user").then( (resp) => {
+            return resp.json()
+        }).then( (user) => {
+            place = document.getElementById("place");
+            ul = document.createElement("ul")
+            for (const [key, value] of Object.entries(user)) {
+                li = document.createElement("li");
+                li.innerText = `${key} : ${value}`;
+                ul.appendChild(li)
+            }
+            console.log(user);
+            place.appendChild(ul);
+        })
+    </script>
+
+
+
+</body>
+
+</html>
